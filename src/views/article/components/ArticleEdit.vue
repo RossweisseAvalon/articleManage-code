@@ -1,13 +1,15 @@
 <script setup>
-import { ref } from 'vue'
-import ChannelSelect from './ChannelSelect.vue'
-import { Plus } from '@element-plus/icons-vue'
-import '@wangeditor/editor/dist/css/style.css' // 引入 css
-import { shallowRef } from 'vue'
-import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { artAddService, artEditService, artGetDetailService } from '@/api/article'
 import { baseURL } from '@/utils/request' // 回显图片需使用基地址
+import { Plus } from '@element-plus/icons-vue'
+import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import axios from 'axios'
+
+import { ref, shallowRef } from 'vue'
+import ChannelSelect from './ChannelSelect.vue'
+import '@wangeditor/editor/dist/css/style.css' // 引入 css
+// 提交
+const emit = defineEmits(['success'])
 const btnBisabled = ref(false)
 // 控制抽屉显示隐藏
 const drawer = ref(false)
@@ -17,7 +19,7 @@ const defaultForm = {
   cate_id: '',
   content: '',
   cover_img: '',
-  state: ''
+  state: '',
 }
 // 发布文章的数据
 const formModel = ref({ ...defaultForm })
@@ -44,28 +46,29 @@ const open = async (row) => {
     formModel.value = res.data.data
     // 图片回显需单独处理
     imgUrl.value = baseURL + formModel.value.cover_img
-    console.log(formModel.value)
-    
+
     // 提交给后台，需要的数据格式是file对象格式
     // 需要将网络图片地址转换成file对象
     const file = await urlToFile(imgUrl.value, formModel.value.cover_img, 'image/jpeg')
-    formModel.value.cover_img = file 
-  } else {
+    formModel.value.cover_img = file
+  }
+  else {
     // 基于默认数据重置form数据
     formModel.value = { ...defaultForm }
     imgUrl.value = '' // 清空图片
   }
   drawer.value = true // 关闭抽屉
 }
-// 提交
-const emit = defineEmits(['success']) // 准备子传父
+// 准备子传父
 const publish = async (state) => {
   // 将state('已发布'或'草稿')状态存入
   formModel.value.state = state
   // 需要的是 formData 格式对象
   const fd = new FormData() // 创建 formdata 对象实例
   // 使用遍历，然后通过append的方法累加
-  for (let key in formModel.value) { fd.append(key, formModel.value[key]) }
+  for (const key in formModel.value) {
+    fd.append(key, formModel.value[key])
+  }
   // 编辑
   if (formModel.value.id) {
     btnBisabled.value = true
@@ -74,7 +77,8 @@ const publish = async (state) => {
     btnBisabled.value = false
     drawer.value = false
     emit('success', 'edit')
-  } else {
+  }
+  else {
     // 添加
     btnBisabled.value = true
     await artAddService(fd)
@@ -91,32 +95,32 @@ async function urlToFile(url, filename, mimeType) {
   try {
     // 获取图片的二进制数据
     const response = await axios.get(url, {
-      responseType: 'blob'  // 将响应数据作为Blob类型
+      responseType: 'blob', // 将响应数据作为Blob类型
     })
     const blob = response.data
     // 将Blob转换为File对象
     return new File([blob], filename, { type: mimeType })
-  } catch (error) {
-    console.error("Error fetching and converting image:", error)
+  }
+  catch (error) {
+    console.error('Error fetching and converting image:', error)
     throw error
   }
 }
 
 defineExpose({
-  open
+  open,
 })
-
-
 </script>
+
 <template>
   <!-- 抽屉 -->
   <el-drawer v-model="drawer" :title="formModel.id ? '编辑文章' : '添加文章'" size="50%">
     <el-form label-width="100px">
       <el-form-item label="文章标题">
-        <el-input v-model="formModel.title" placeholder="请输入标题"></el-input>
+        <el-input v-model="formModel.title" placeholder="请输入标题" />
       </el-form-item>
       <el-form-item label="文章分类">
-        <ChannelSelect v-model="formModel.cate_id" style="width: 100%;"></ChannelSelect>
+        <ChannelSelect v-model="formModel.cate_id" style="width: 100%;" />
       </el-form-item>
       <el-form-item label="文章封面">
         <!-- 此处需关闭element-plus的自动上传，不需要配置action等参数 -->
@@ -128,8 +132,10 @@ defineExpose({
           :auto-upload="false"
           :on-change="selectFile"
         >
-          <img v-if="imgUrl" :src="imgUrl" class="avatar" />
-          <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+          <img v-if="imgUrl" :src="imgUrl" class="avatar">
+          <el-icon v-else class="avatar-uploader-icon">
+            <Plus />
+          </el-icon>
         </el-upload>
       </el-form-item>
       <el-form-item label="文章内容">
@@ -139,38 +145,42 @@ defineExpose({
             :editor="editorRef"
           />
           <Editor
-            style="height: 500px; overflow-y: hidden;"
             v-model="formModel.content"
-            :defaultConfig="editorConfig"
-            @onCreated="handleCreated"
+            style="height: 500px; overflow-y: hidden;"
+            :default-config="editorConfig"
+            @on-created="handleCreated"
           />
         </div>
       </el-form-item>
       <el-form-item>
-        <el-button :disabled="btnBisabled" @click="publish('已发布')" type="primary">发布</el-button>
-        <el-button :disabled="btnBisabled" @click="publish('草稿')">草稿</el-button>
+        <el-button :disabled="btnBisabled" type="primary" @click="publish('已发布')">
+          发布
+        </el-button>
+        <el-button :disabled="btnBisabled" @click="publish('草稿')">
+          草稿
+        </el-button>
       </el-form-item>
     </el-form>
   </el-drawer>
 </template>
+
 <style lang="scss" scoped>
-  .avatar-uploader,
-  .avatar {
+.avatar-uploader,
+.avatar {
+  width: 178px;
+  height: 178px;
+  border: 1px dashed var(--el-border-color);
+  border-radius: 8px;
+
+  .el-icon {
     width: 178px;
     height: 178px;
-    border: 1px dashed var(--el-border-color);
-    border-radius: 8px;
-
-    .el-icon {
-      width: 178px;
-      height: 178px;
-      font-size: 28px;
-      color: #8c939d;
-    }
-
-    &:hover {
-      border-color: var(--el-color-primary);
-    }
+    font-size: 28px;
+    color: #8c939d;
   }
 
+  &:hover {
+    border-color: var(--el-color-primary);
+  }
+}
 </style>

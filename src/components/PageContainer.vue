@@ -3,21 +3,22 @@
 defineProps({
   title: {
     required: true,
-    type: String
-  }
+    type: String,
+  },
 })
 </script>
+
 <template>
   <el-card class="page-container">
     <template #header>
       <div class="header">
         <span>{{ title }}</span>
         <div class="extra">
-          <slot name="extra"></slot>
+          <slot name="extra" />
         </div>
       </div>
     </template>
-    <slot></slot>
+    <slot />
   </el-card>
 </template>
 

@@ -6,8 +6,8 @@ export const userLoginService = ({ username, password }) => request.post('/api/l
 // 获取用户基本信息
 export const userGetInfoService = () => request.get('/my/userinfo')
 // 更新用户信息
-export const userUpdateInfoService = (data) => request.put('/my/userinfo', data)
+export const userUpdateInfoService = data => request.put('/my/userinfo', data)
 // 更新头像
-export const userUpdateAvatarService = (avatar) => request.patch('/my/update/avatar', { avatar })
+export const userUpdateAvatarService = avatar => request.patch('/my/update/avatar', { avatar })
 // 更新密码
-export const userUpdatePasswordService = (data) => request.patch('/my/updatepwd', data)
+export const userUpdatePasswordService = data => request.patch('/my/updatepwd', data)

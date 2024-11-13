@@ -3,13 +3,13 @@ export default {
   // stylelint-config-standard 基础配置
   // stylelint-config-recess-order 样式顺序
   extends: ['stylelint-config-standard', 'stylelint-config-recess-order'],
-  // 不同文件类型用不同解析器 
+  // 不同文件类型用不同解析器
   overrides: [
     {
       files: ['**/*.(css|html|vue)'],
       customSyntax: 'postcss-html',
     },
-    // 选less可以注释scss 
+    // 选less可以注释scss
     {
       files: ['*.less', '**/*.less'],
       customSyntax: 'postcss-less',
@@ -40,7 +40,7 @@ export default {
     'selector-pseudo-element-no-unknown': [
       true,
       {
-        ignorePseudoElements: ['v-deep',':deep'],
+        ignorePseudoElements: ['v-deep', ':deep'],
       },
     ],
     'at-rule-no-unknown': [

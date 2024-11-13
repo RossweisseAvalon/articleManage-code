@@ -5,14 +5,14 @@ import { ref } from 'vue'
 export const useUserStore = defineStore('user', () => {
   // token
   const token = ref('')
-  const setToken = (newToken) => token.value = newToken
+  const setToken = newToken => token.value = newToken
   // user
   const user = ref({})
   const getUser = async () => {
-    const res = await userGetInfoService()    
+    const res = await userGetInfoService()
     user.value = res.data.data
   }
-  const setUser = (obj) => user.value = obj
+  const setUser = obj => user.value = obj
   // 用户密码
   const password = ref('')
   return {
@@ -24,5 +24,5 @@ export const useUserStore = defineStore('user', () => {
     password,
   }
 }, {
-  persist: true
+  persist: true,
 })

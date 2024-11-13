@@ -1,8 +1,8 @@
 <script setup>
-import { ref } from 'vue'
-import { Plus, Upload } from '@element-plus/icons-vue'
-import { useUserStore } from '@/stores'
 import { userUpdateAvatarService } from '@/api/user'
+import { useUserStore } from '@/stores'
+import { Plus, Upload } from '@element-plus/icons-vue'
+import { ref } from 'vue'
 // 基于stroe获取i用户头像初始值
 const userStore = useUserStore()
 const imageUrl = ref('')
@@ -16,7 +16,7 @@ const selectFile = (uploadFile) => {
   reader.onload = () => {
     imageUrl.value = reader.result
   }
-} 
+}
 // 上传头像
 const uploadAvatar = async () => {
   await userUpdateAvatarService(imageUrl.value)
@@ -25,21 +25,29 @@ const uploadAvatar = async () => {
   ElMessage.success('上传头像成功')
 }
 </script>
+
 <template>
   <page-container title="更换头像">
-    <el-upload 
+    <el-upload
+      ref="uploadRef"
       :on-change="selectFile"
-      ref="uploadRef" 
-      style="margin-bottom: 20px;" 
-      :auto-upload="false" 
-      :show-file-list="false" 
-      class="avatar-uploader">
-      <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-      <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+      style="margin-bottom: 20px;"
+      :auto-upload="false"
+      :show-file-list="false"
+      class="avatar-uploader"
+    >
+      <img v-if="imageUrl" :src="imageUrl" class="avatar">
+      <el-icon v-else class="avatar-uploader-icon">
+        <Plus />
+      </el-icon>
     </el-upload>
     <!-- $el: 用于获取组件内 DOM -->
-    <el-button @click="uploadRef.$el.querySelector('input').click()"  type="primary" :icon="Plus">选择图片</el-button>
-    <el-button @click="uploadAvatar" type="success" :icon="Upload">上传头像</el-button>
+    <el-button type="primary" :icon="Plus" @click="uploadRef.$el.querySelector('input').click()">
+      选择图片
+    </el-button>
+    <el-button type="success" :icon="Upload" @click="uploadAvatar">
+      上传头像
+    </el-button>
   </page-container>
 </template>
 

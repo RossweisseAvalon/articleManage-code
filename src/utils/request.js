@@ -1,6 +1,7 @@
 import router from '@/router'
 import { useUserStore } from '@/stores'
 import axios from 'axios'
+import { ElMessage } from 'element-plus'
 
 const baseURL = 'http://big-event-vue-api-t.itheima.net'
 const instance = axios.create({
@@ -34,7 +35,7 @@ instance.interceptors.response.use((response) => {
   if (error.response?.status === 401) {
     router.push('/login')
   }
-  
+
   // 错误的默认情况
   ElMessage.error(error.message || '服务异常')
   return Promise.reject(error)

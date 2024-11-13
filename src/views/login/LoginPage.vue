@@ -1,7 +1,7 @@
 <script setup>
-   import { userLoginService, userRegisterService } from '@/api/user'
+import { userLoginService, userRegisterService } from '@/api/user'
 import { useUserStore } from '@/stores'
-import { User, Lock } from '@element-plus/icons-vue'
+import { Lock, User } from '@element-plus/icons-vue'
 import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 // 登录注册切换
@@ -12,7 +12,7 @@ const formRef = ref()
 const formModel = ref({
   username: '',
   password: '',
-  repassword: ''
+  repassword: '',
 })
 // 表单校验规则
 // 1.非空 required ，message 提示，trigger 触发时机 blur(失焦) change(值改变)
@@ -28,11 +28,11 @@ const formModel = ref({
 const rules = {
   username: [
     { required: true, message: '请输入用户名', trigger: 'change' },
-    { min: 5, max: 10, message: '用户名必须是5-10位的字符', trigger: 'change' }
+    { min: 5, max: 10, message: '用户名必须是5-10位的字符', trigger: 'change' },
   ],
   password: [
     { required: true, message: '请输入密码', trigger: 'change' },
-    { pattern: /^\S{6,15}$/, message: '密码必须是6-15位的非空字符', trigger: 'change' }
+    { pattern: /^\S{6,15}$/, message: '密码必须是6-15位的非空字符', trigger: 'change' },
   ],
   repassword: [
     { required: true, message: '请输入密码', trigger: 'change' },
@@ -40,14 +40,15 @@ const rules = {
     {
       validator: (rule, value, caliback) => {
         // 判断 value 和 当前 form 中收集的 password 是否一致
-        if (value !== formModel.value.password ) {
+        if (value !== formModel.value.password) {
           caliback(new Error('两次输入的密码不一致'))
-        } else {
+        }
+        else {
           caliback() // 校验成功也需要 caliback()
         }
-      }
-    }
-  ]
+      },
+    },
+  ],
 }
 
 const userStore = useUserStore()
@@ -81,22 +82,22 @@ watch(isRegister, () => {
   formModel.value = {
     username: '',
     password: '',
-    repassword: ''
+    repassword: '',
   }
 })
 </script>
 
 <template>
   <el-row class="login-page">
-    <el-col :span="12" class="bg"></el-col>
+    <el-col :span="12" class="bg" />
     <el-col :span="6" :offset="3" class="form">
       <!-- 注册 -->
-      <el-form :model="formModel" :rules="rules" ref="formRef" size="large" autocomplete="off" v-if="isRegister">
+      <el-form v-if="isRegister" ref="formRef" :model="formModel" :rules="rules" size="large" autocomplete="off">
         <el-form-item>
           <h1>注册</h1>
         </el-form-item>
         <el-form-item prop="username">
-          <el-input v-model="formModel.username" :prefix-icon="User" placeholder="请输入用户名"></el-input>
+          <el-input v-model="formModel.username" :prefix-icon="User" placeholder="请输入用户名" />
         </el-form-item>
         <el-form-item prop="password">
           <el-input
@@ -104,7 +105,7 @@ watch(isRegister, () => {
             :prefix-icon="Lock"
             type="password"
             placeholder="请输入密码"
-          ></el-input>
+          />
         </el-form-item>
         <el-form-item prop="repassword">
           <el-input
@@ -112,10 +113,10 @@ watch(isRegister, () => {
             :prefix-icon="Lock"
             type="password"
             placeholder="请输入再次密码"
-          ></el-input>
+          />
         </el-form-item>
         <el-form-item>
-          <el-button @click="register" class="button" type="primary" auto-insert-space>
+          <el-button class="button" type="primary" auto-insert-space @click="register">
             注册
           </el-button>
         </el-form-item>
@@ -126,12 +127,12 @@ watch(isRegister, () => {
         </el-form-item>
       </el-form>
       <!-- 登录 -->
-      <el-form :model="formModel" :rules="rules" ref="formRef" size="large" autocomplete="off" v-else>
+      <el-form v-else ref="formRef" :model="formModel" :rules="rules" size="large" autocomplete="off">
         <el-form-item>
           <h1>登录</h1>
         </el-form-item>
         <el-form-item prop="username">
-          <el-input v-model="formModel.username" :prefix-icon="User" placeholder="请输入用户名"></el-input>
+          <el-input v-model="formModel.username" :prefix-icon="User" placeholder="请输入用户名" />
         </el-form-item>
         <el-form-item prop="password">
           <el-input
@@ -140,16 +141,18 @@ watch(isRegister, () => {
             :prefix-icon="Lock"
             type="password"
             placeholder="请输入密码"
-          ></el-input>
+          />
         </el-form-item>
         <el-form-item class="flex">
           <div class="flex">
             <el-checkbox>记住我</el-checkbox>
-            <el-link type="primary" :underline="false">忘记密码？</el-link>
+            <el-link type="primary" :underline="false">
+              忘记密码？
+            </el-link>
           </div>
         </el-form-item>
         <el-form-item>
-          <el-button @click="login" class="button" type="primary" auto-insert-space>
+          <el-button class="button" type="primary" auto-insert-space @click="login">
             登录
           </el-button>
         </el-form-item>
@@ -169,7 +172,8 @@ watch(isRegister, () => {
   background-color: #fff;
 
   .bg {
-    background: url('') no-repeat 60% center / 240px auto,
+    background:
+      url('') no-repeat 60% center / 240px auto,
       url('@/assets/丽塔.jpg') no-repeat center / cover;
     border-radius: 0 20px 20px 0;
   }
