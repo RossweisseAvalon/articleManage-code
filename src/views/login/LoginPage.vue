@@ -174,7 +174,7 @@ watch(isRegister, () => {
   .bg {
     background:
       url('') no-repeat 60% center / 240px auto,
-      url('@/assets/丽塔.jpg') no-repeat center / cover;
+      url('@/assets/rita.jpg') no-repeat center / cover;
     border-radius: 0 20px 20px 0;
   }
 
